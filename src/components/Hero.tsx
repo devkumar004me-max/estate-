@@ -67,7 +67,7 @@ export function Hero() {
       <div className="relative z-10 container mx-auto px-6 text-center text-white max-w-5xl">
         <h1 
           ref={headlineRef} 
-          className="font-tanklager text-6xl md:text-8xl lg:text-[120px] leading-[0.9] tracking-tight uppercase flex flex-wrap justify-center overflow-hidden"
+          className="font-tanklager text-5xl sm:text-7xl md:text-8xl lg:text-[120px] leading-[0.9] tracking-tight uppercase flex flex-wrap justify-center overflow-hidden"
         >
           {titleWords.map((word, i) => (
             <span key={i} className="word inline-block mr-[2vw] transform">

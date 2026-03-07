@@ -28,7 +28,7 @@ export function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ease-in-out ${isScrolled ? 'glass py-4 shadow-lg' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ease-in-out ${isScrolled ? 'glass py-4 shadow-lg' : 'bg-primary/20 backdrop-blur-md md:bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bricolage font-bold tracking-tight text-white hover:text-accent transition-colors duration-300">
             DEV
@@ -55,7 +55,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu">
+          <button className="md:hidden text-white p-2 -mr-2" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu">
             <Menu size={28} />
           </button>
         </div>
