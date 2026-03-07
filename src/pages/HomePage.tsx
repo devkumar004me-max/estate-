@@ -1,7 +1,6 @@
 import { PageTransition } from '../components/PageTransition';
 import { Hero } from '../components/Hero';
 import { SearchBar } from '../components/SearchBar';
-import { LuxuryFeatures } from '../components/LuxuryFeatures';
 import { StatsBar } from '../components/StatsBar';
 import { FeaturedProperties } from '../components/FeaturedProperties';
 import { WhyChooseUs } from '../components/WhyChooseUs';
@@ -17,7 +16,7 @@ export function HomePage() {
     <PageTransition>
       <Hero />
       <SearchBar />
-      <LuxuryFeatures />
+
       <StatsBar />
       <FeaturedProperties />
       <WhyChooseUs />
