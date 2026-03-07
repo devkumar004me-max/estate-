@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ScrollFloat from './ScrollFloat';
+import ScrollReveal from './ScrollReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,10 +29,21 @@ export function WhyChooseUs() {
           
           <div className="space-y-12">
             <div>
-              <h2 className="font-getai text-5xl md:text-6xl mb-6">Redefining Excellence</h2>
-              <p className="font-authentic text-lg text-primary/70 max-w-md leading-relaxed">
+              <ScrollFloat
+                animationDuration={0.8}
+                stagger={0.03}
+                containerClassName="mb-6"
+                textClassName="font-getai text-5xl md:text-6xl"
+              >
+                Redefining Excellence
+              </ScrollFloat>
+              <ScrollReveal
+                baseOpacity={0.2}
+                blurStrength={8}
+                textClassName="font-authentic text-lg text-primary/70 max-w-md leading-relaxed"
+              >
                 We believe finding a home is more than a transaction. It's an experience tailored to your unique lifestyle.
-              </p>
+              </ScrollReveal>
             </div>
 
             <div className="space-y-8">

@@ -1,4 +1,6 @@
 import { Home, Key, ShieldCheck } from 'lucide-react';
+import ScrollFloat from './ScrollFloat';
+import ScrollReveal from './ScrollReveal';
 
 const services = [
   {
@@ -23,10 +25,22 @@ export function Services() {
     <section className="py-24 bg-[#E8E6E1] text-primary relative z-10">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="text-center mb-16">
-          <h2 className="font-getai text-5xl md:text-6xl text-primary font-bold">Bespoke Services</h2>
-          <p className="font-authentic text-lg text-primary/60 mt-4 max-w-2xl mx-auto">
+          <ScrollFloat
+            animationDuration={0.8}
+            stagger={0.03}
+            containerClassName="mb-4"
+            textClassName="font-getai text-5xl md:text-6xl text-primary font-bold"
+          >
+            Bespoke Services
+          </ScrollFloat>
+          <ScrollReveal
+            baseOpacity={0.2}
+            blurStrength={8}
+            containerClassName="max-w-2xl mx-auto"
+            textClassName="font-authentic text-lg text-primary/60"
+          >
             Our comprehensive approach ensures a seamless experience across all real estate transactions.
-          </p>
+          </ScrollReveal>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
