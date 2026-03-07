@@ -3,7 +3,7 @@ import gsap from 'gsap';
 
 import preloaderBg from '../assets/preloader-bg.jpg';
 
-export function Preloader() {
+export function Preloader({ onComplete }: { onComplete?: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLHeadingElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -35,7 +35,11 @@ export function Preloader() {
     .to(containerRef.current, {
       opacity: 0,
       duration: 0.8,
-      ease: 'power2.inOut'
+      ease: 'power2.inOut',
+      onComplete: () => {
+        setComplete(true);
+        onComplete?.();
+      }
     });
 
   }, []);
@@ -45,7 +49,7 @@ export function Preloader() {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 z-100 flex items-center justify-center text-white overflow-hidden bg-primary"
+      className="fixed inset-0 z-[999] flex items-center justify-center text-white overflow-hidden bg-primary"
     >
       {/* Background Image */}
       <div 

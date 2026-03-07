@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LenisProvider } from './components/LenisProvider';
 import { Preloader } from './components/Preloader';
 import { Navbar } from './components/Navbar';
@@ -15,6 +17,8 @@ import { AboutPage } from './pages/AboutPage';
 import { BlogPage } from './pages/BlogPage';
 import { ContactPage } from './pages/ContactPage';
 import { DemoTourPage } from './pages/DemoTourPage';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -34,6 +38,16 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
+
+  useEffect(() => {
+    if (isPreloaderComplete) {
+      // Refresh ScrollTrigger and ScrollFloat/Reveal components
+      window.scrollTo(0, 0);
+      ScrollTrigger.refresh();
+    }
+  }, [isPreloaderComplete]);
+
   return (
     <BrowserRouter>
       <LenisProvider>
@@ -41,7 +55,7 @@ function App() {
           <Suspense fallback={null}>
             <FluidGlassBackground />
           </Suspense>
-          <Preloader />
+          <Preloader onComplete={() => setIsPreloaderComplete(true)} />
           <Navbar />
           <main className="relative z-1">
             <AnimatedRoutes />
