@@ -1,7 +1,9 @@
 /* eslint-disable react/no-unknown-property */
 import * as THREE from 'three';
-import { useRef, useState, useEffect, memo, ReactNode } from 'react';
-import { Canvas, createPortal, useFrame, useThree, ThreeElements } from '@react-three/fiber';
+import { useRef, useState, memo, Suspense } from 'react';
+import type { ReactNode } from 'react';
+import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber';
+import type { ThreeElements } from '@react-three/fiber';
 import {
   useFBO,
   useGLTF,
@@ -16,12 +18,16 @@ interface FluidGlassProps {
 
 export function FluidGlass({ children, scale = 0.1 }: FluidGlassProps) {
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
-      <Canvas camera={{ position: [0, 0, 20], fov: 15 }} gl={{ alpha: true }}>
-        <Lens scale={scale}>
-          {children}
-        </Lens>
-      </Canvas>
+    <div className="fixed inset-0 pointer-events-none">
+      <Suspense fallback={null}>
+        <Canvas camera={{ position: [0, 0, 20], fov: 15 }} gl={{ alpha: true }}>
+          <ambientLight intensity={2} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+          <Lens scale={scale}>
+            {children}
+          </Lens>
+        </Canvas>
+      </Suspense>
     </div>
   );
 }
@@ -54,9 +60,11 @@ const ModeWrapper = memo(function ModeWrapper({
 
     const destX = (pointer.x * v.width) / 2;
     const destY = (pointer.y * v.height) / 2;
-    easing.damp3(ref.current.position, [destX, destY, 15], 0.15, delta);
-
-    ref.current.scale.setScalar(modeScale);
+    
+    if (ref.current) {
+      easing.damp3(ref.current.position, [destX, destY, 15], 0.15, delta);
+      ref.current.scale.setScalar(modeScale);
+    }
 
     gl.setRenderTarget(buffer);
     gl.render(scene, camera);

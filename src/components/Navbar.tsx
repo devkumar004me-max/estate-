@@ -1,109 +1,104 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import GooeyNav from './GooeyNav';
-import FlowingMenu from './FlowingMenu';
+import { Menu, X } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Properties', href: '/properties', image: 'https://images.unsplash.com/photo-1600585154340-be6199fce8a8?auto=format&fit=crop&w=800&q=80' },
-  { name: 'Services', href: '/services', image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80' },
-  { name: 'About', href: '/about', image: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=800&q=80' },
-  { name: 'Story', href: '/story', image: 'https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Properties', href: '/properties' },
+  { name: 'Services', href: '/services' },
+  { name: 'About Us', href: '/about' },
+  { name: 'Intelligence', href: '/blog' },
+  { name: 'Demo Tour', href: '/demo-tour' },
+  { name: 'Contact', href: '/contact' },
 ];
 
-export const Navbar: React.FC = () => {
+export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Use location key change to close menu instead of direct setState in effect to satisfy strict lint
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      setMobileMenuOpen(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  // Close mobile menu on route change
+  useEffect(() => { setMobileMenuOpen(false); }, [location]);
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ease-in-out ${isScrolled ? 'py-4' : 'py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between pointer-events-none">
-          <div className="pointer-events-auto">
-            <Link to="/" className="text-2xl font-bricolage font-bold tracking-tight text-white hover:text-accent transition-colors duration-300">
-              DEV
-            </Link>
-          </div>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ease-in-out ${isScrolled ? 'glass py-4 shadow-lg' : 'bg-primary/20 backdrop-blur-md md:bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+          <Link to="/" className="text-2xl font-bricolage font-bold tracking-tight text-white hover:text-accent transition-colors duration-300">
+            DEV
+          </Link>
 
-          {/* Desktop Nav - Gooey Pill */}
-          <div className="hidden lg:block pointer-events-auto">
-            <GooeyNav 
-              items={navLinks.map(l => ({ label: l.name, href: l.href }))}
-              initialActiveIndex={navLinks.findIndex(l => l.href === location.pathname)}
-            />
-          </div>
-
-          <div className="flex items-center gap-4 pointer-events-auto">
-            <Link to="/contact" className="hidden md:block font-bricolage text-sm font-bold uppercase tracking-wider px-5 py-2.5 bg-accent text-primary rounded-full hover:bg-white transition-colors duration-300">
+          {/* Desktop Nav */}
+          <div className="hidden md:flex gap-8 items-center">
+            {navLinks.map((link) => {
+              const active = location.pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`group relative font-bricolage text-[15px] font-medium tracking-[0.08em] uppercase transition-colors ${active ? 'text-accent' : 'text-white/90 hover:text-white'}`}
+                >
+                  {link.name}
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-accent transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                </Link>
+              );
+            })}
+            <Link to="/contact" className="font-bricolage text-sm font-bold uppercase tracking-wider px-5 py-2.5 bg-accent text-primary rounded hover:bg-white transition-colors duration-300">
               Book a Call
             </Link>
-
-            {/* Global Menu Toggle */}
-            <button 
-              className="text-white p-3 bg-white/10 backdrop-blur-md rounded-full hover:bg-accent hover:text-primary transition-all duration-300" 
-              onClick={() => setMobileMenuOpen(true)} 
-              aria-label="Open menu"
-            >
-              <Menu size={24} />
-            </button>
           </div>
+
+          {/* Mobile Menu Toggle */}
+          <button className="md:hidden text-white p-2 -mr-2" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu">
+            <Menu size={28} />
+          </button>
         </div>
       </nav>
 
-      {/* Fullscreen Flowing Menu (Staggered Menu) */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] bg-primary flex flex-col"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.4, ease: 'easeInOut' }}
+            className="fixed inset-0 z-50 bg-primary flex flex-col pt-24 px-8"
           >
-            <div className="absolute top-8 right-8 z-[120]">
-              <button 
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-4 text-white hover:text-accent transition-colors"
-              >
-                <X size={40} />
-              </button>
+            <button className="absolute top-6 right-6 text-white" onClick={() => setMobileMenuOpen(false)}>
+              <X size={32} />
+            </button>
+            <div className="flex flex-col gap-6 mt-12">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08 + 0.2 }}
+                >
+                  <Link
+                    to={link.href}
+                    className={`font-bricolage text-3xl font-bold uppercase tracking-wider block transition-colors ${location.pathname === link.href ? 'text-accent' : 'text-white hover:text-accent'}`}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
+              ))}
             </div>
-            
-            <div className="flex-1">
-              <FlowingMenu 
-                items={navLinks.map(l => ({ text: l.name, link: l.href, image: l.image }))}
-                speed={20}
-              />
-            </div>
-
-            <div className="p-12 border-t border-white/5 flex justify-between items-center bg-primary">
-              <p className="text-secondary/40 font-clash text-sm tracking-widest uppercase">Luxury Real Estate © 2026</p>
-              <div className="flex gap-8">
-                {['Instagram', 'LinkedIn', 'Twitter'].map(social => (
-                  <a key={social} href="#" className="text-white hover:text-accent font-clash text-xs tracking-widest uppercase transition-colors">{social}</a>
-                ))}
-              </div>
+            <div className="mt-12">
+              <Link to="/contact" className="font-bricolage text-lg font-bold uppercase tracking-wider px-8 py-4 bg-accent text-primary rounded inline-block">
+                Book a Call
+              </Link>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
-};
+}

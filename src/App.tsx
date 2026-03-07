@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { Suspense } from 'react';
 import { LenisProvider } from './components/LenisProvider';
 import { Preloader } from './components/Preloader';
 import { Navbar } from './components/Navbar';
@@ -37,7 +38,9 @@ function App() {
     <BrowserRouter>
       <LenisProvider>
         <div className="bg-primary text-white min-h-screen font-authentic selection:bg-accent selection:text-primary relative">
-          <FluidGlassBackground />
+          <Suspense fallback={null}>
+            <FluidGlassBackground />
+          </Suspense>
           <Preloader />
           <Navbar />
           <main className="relative z-1">

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 interface GooeyNavItem {
   label: string;
@@ -32,7 +32,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   const textRef = useRef<HTMLSpanElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
 
-  // Noise function moved out of render or into useMemo if needed within callbacks
   const getNoise = (n = 1) => n / 2 - Math.random() * n;
 
   const getXY = (distance: number, pointIndex: number, totalPoints: number): [number, number] => {
@@ -84,9 +83,9 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
         });
         
         setTimeout(() => {
-          try {
+          if (element.contains(particle)) {
             element.removeChild(particle);
-          } catch {}
+          }
         }, t);
       }, 30);
     }
@@ -115,7 +114,11 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     
     if (filterRef.current) {
       const particles = filterRef.current.querySelectorAll('.particle');
-      particles.forEach(p => filterRef.current!.removeChild(p));
+      particles.forEach(p => {
+        if (filterRef.current?.contains(p)) {
+          filterRef.current.removeChild(p);
+        }
+      });
       makeParticles(filterRef.current);
     }
     
@@ -144,11 +147,14 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   }, [activeIndex]);
 
   return (
-    <>
+    <div className="relative" ref={containerRef}>
       <style>
         {`
           :root {
-            --linear-ease: linear(0, 0.068, 0.19 2.7%, 0.804 8.1%, 1.037, 1.199 13.2%, 1.245, 1.27 15.8%, 1.274, 1.272 17.4%, 1.249 19.1%, 0.996 28%, 0.949, 0.928 33.3%, 0.926, 0.933 36.8%, 1.001 45.6%, 1.013, 1.019 50.8%, 1.018 54.4%, 1 63.1%, 0.995 68%, 1.001 85%, 1);
+            --color-1: #C9A96E;
+            --color-2: #F5F3EF;
+            --color-3: #FFFFFF;
+            --color-4: #0C0C0C;
           }
           .effect {
             position: absolute;
@@ -211,16 +217,16 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             position: absolute;
             top: calc(50% - 8px);
             left: calc(50% - 8px);
-            animation: particle calc(var(--time)) ease 1 -350ms;
+            animation: particle var(--time) ease 1 -350ms;
           }
           .point {
             background: var(--color);
             opacity: 1;
-            animation: point calc(var(--time)) ease 1 -350ms;
+            animation: point var(--time) ease 1 -350ms;
           }
           @keyframes particle {
             0% {
-              transform: rotate(0deg) translate(calc(var(--start-x)), calc(var(--start-y)));
+              transform: rotate(0deg) translate(var(--start-x), var(--start-y));
               opacity: 1;
               animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
             }
@@ -230,7 +236,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
               animation-timing-function: ease;
             }
             85% {
-              transform: rotate(calc(var(--rotate) * 0.66)) translate(calc(var(--end-x)), calc(var(--end-y)));
+              transform: rotate(calc(var(--rotate) * 0.66)) translate(var(--end-x), var(--end-y));
               opacity: 1;
             }
             100% {
@@ -264,39 +270,34 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
               opacity: 0;
             }
           }
-          li.active {
-            color: #0C0C0C;
-          }
         `}
       </style>
-      <div className="relative" ref={containerRef}>
-        <nav className="flex relative" style={{ transform: 'translate3d(0,0,0.01px)' }}>
-          <ul
-            ref={navRef}
-            className="flex gap-4 list-none p-1 m-0 relative z-[10] bg-white/5 backdrop-blur-md rounded-full border border-white/10"
-          >
-            {items.map((item, index) => (
-              <li
-                key={index}
-                className={`rounded-full relative cursor-pointer transition-colors duration-300 ease text-white/70 hover:text-white ${
-                  activeIndex === index ? 'active' : ''
-                }`}
+      <nav className="flex relative" style={{ transform: 'translate3d(0,0,0.01px)' }}>
+        <ul
+          ref={navRef}
+          className="flex gap-4 list-none p-1 m-0 relative z-10 bg-white/5 backdrop-blur-md rounded-full border border-white/10"
+        >
+          {items.map((item, index) => (
+            <li
+              key={index}
+              className={`rounded-full relative cursor-pointer transition-colors duration-300 ease text-white/70 hover:text-white ${
+                activeIndex === index ? 'active' : ''
+              }`}
+            >
+              <a
+                href={item.href}
+                onClick={e => handleClick(e, index)}
+                className="outline-none py-2 px-5 inline-block font-medium text-sm tracking-wide"
               >
-                <a
-                  href={item.href}
-                  onClick={e => handleClick(e, index)}
-                  className="outline-none py-2 px-5 inline-block font-medium text-sm tracking-wide"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <span className="effect filter" ref={filterRef} />
-        <span className="effect text" ref={textRef} />
-      </div>
-    </>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <span className="effect filter" ref={filterRef} />
+      <span className="effect text" ref={textRef} />
+    </div>
   );
 };
 
