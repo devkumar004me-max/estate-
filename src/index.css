@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Sansita+Swashed:wght@400;700&family=Space+Grotesk:wght@400;700&family=Oswald:wght@400;700&family=Inter:wght@400;500;600;700&family=Syne:wght@400;700;800&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-tanklager: "Tanklager", "Oswald", sans-serif;
+  --font-getai: "Getai Grotesk Display", "Space Grotesk", sans-serif;
+  --font-bricolage: "Bricolage Grotesque", sans-serif;
+  --font-sansita: "Sansita Swashed", cursive;
+  --font-authentic: "Authentic Sans", "Inter", sans-serif;
+  --font-clash: "Clash Display", "Bricolage Grotesque", sans-serif;
+  --font-guess: "Guess", "Syne", sans-serif;
+
+  --color-primary: #0C0C0C;
+  --color-secondary: #F5F3EF;
+  --color-accent: #C9A96E;
+  --color-text-dark: #FFFFFF;
+  --color-text-light: #1A1A1A;
+  --color-text-muted: #888888;
+  --color-card: #161616;
+  --color-glass: rgba(255, 255, 255, 0.08);
+
+  --animate-gradient: gradient 8s linear infinite;
+  
+  @keyframes gradient {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
+
+@layer base {
+  :root {
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+  }
+
+  body {
+    font-family: var(--font-authentic);
+    overflow-x: hidden;
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+  }
+
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .glass {
+    background: var(--color-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .font-tanklager { font-family: var(--font-tanklager); }
+  .font-getai { font-family: var(--font-getai); }
+  .font-bricolage { font-family: var(--font-bricolage); }
+  .font-sansita { font-family: var(--font-sansita); }
+  .font-authentic { font-family: var(--font-authentic); }
+  .font-clash { font-family: var(--font-clash); }
+  .font-guess { font-family: var(--font-guess); }
+}
