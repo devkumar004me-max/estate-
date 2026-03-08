@@ -52,10 +52,21 @@ function App() {
     <BrowserRouter>
       <LenisProvider>
         <div className="bg-primary text-white min-h-screen font-authentic selection:bg-accent selection:text-primary relative">
-          <Preloader onComplete={() => setIsPreloaderComplete(true)} />
+          {/* Debug Banner */}
+          <div className="fixed top-0 left-0 bg-red-500 text-white z-[1000] p-1 text-[10px] pointer-events-none">
+            Debug: {isPreloaderComplete ? 'Content Loaded' : 'Preloading...'}
+          </div>
+          
+          {!isPreloaderComplete && (
+            <Preloader onComplete={() => {
+              console.log('App: Preloader called onComplete');
+              setIsPreloaderComplete(true);
+            }} />
+          )}
+          
           <Navbar />
           <main className="relative z-1">
-            <Suspense fallback={null}>
+            <Suspense fallback={<div className="p-10 text-white">Loading routes...</div>}>
               <AnimatedRoutes />
             </Suspense>
           </main>
