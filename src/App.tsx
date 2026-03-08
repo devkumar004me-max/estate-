@@ -40,8 +40,9 @@ function App() {
   const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
 
   useEffect(() => {
+    console.log('App: isPreloaderComplete changed:', isPreloaderComplete);
     if (isPreloaderComplete) {
-      // Refresh ScrollTrigger and ScrollFloat/Reveal components
+      console.log('App: Refreshing ScrollTrigger');
       window.scrollTo(0, 0);
       ScrollTrigger.refresh();
     }

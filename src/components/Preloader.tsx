@@ -9,8 +9,10 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
+    console.log('Preloader: Starting animation');
     const tl = gsap.timeline({
       onComplete: () => {
+        console.log('Preloader: GSAP timeline onComplete');
         setComplete(true);
       }
     });
