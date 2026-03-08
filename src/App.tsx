@@ -7,7 +7,6 @@ import { LenisProvider } from './components/LenisProvider';
 import { Preloader } from './components/Preloader';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { FluidGlassBackground } from './components/FluidGlassBackground';
 
 // Pages
 import { HomePage } from './pages/HomePage';
@@ -52,13 +51,12 @@ function App() {
     <BrowserRouter>
       <LenisProvider>
         <div className="bg-primary text-white min-h-screen font-authentic selection:bg-accent selection:text-primary relative">
-          <Suspense fallback={null}>
-            <FluidGlassBackground />
-          </Suspense>
           <Preloader onComplete={() => setIsPreloaderComplete(true)} />
           <Navbar />
           <main className="relative z-1">
-            <AnimatedRoutes />
+            <Suspense fallback={null}>
+              <AnimatedRoutes />
+            </Suspense>
           </main>
           <Footer />
         </div>

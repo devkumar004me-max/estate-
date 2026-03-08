@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
-import preloaderBg from '../assets/preloader-bg.jpg';
 
 export function Preloader({ onComplete }: { onComplete?: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,32 +16,46 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
     });
 
     // Animate progress bar across screen
-    tl.to(progressRef.current, {
-      scaleX: 1,
-      transformOrigin: 'left',
-      duration: 1.5,
-      ease: 'power3.inOut'
-    })
+    if (progressRef.current) {
+      tl.to(progressRef.current, {
+        scaleX: 1,
+        transformOrigin: 'left',
+        duration: 1.5,
+        ease: 'power3.inOut'
+      });
+    }
+
     // Logo reveal upward
-    .fromTo(logoRef.current, 
-      { y: 50, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-      "-=0.5"
-    )
+    if (logoRef.current) {
+      tl.fromTo(logoRef.current, 
+        { y: 50, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+        "-=0.5"
+      );
+    }
+
     // Hold briefly
-    .to({}, { duration: 0.5 })
+    tl.to({}, { duration: 0.5 });
+
     // Fade out preloader container
-    .to(containerRef.current, {
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power2.inOut',
-      onComplete: () => {
+    if (containerRef.current) {
+      tl.to(containerRef.current, {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          setComplete(true);
+          onComplete?.();
+        }
+      });
+    } else {
+      requestAnimationFrame(() => {
         setComplete(true);
         onComplete?.();
-      }
-    });
+      });
+    }
 
-  }, []);
+  }, [onComplete]);
 
   if (complete) return null;
 
@@ -51,14 +64,6 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
       ref={containerRef}
       className="fixed inset-0 z-[999] flex items-center justify-center text-white overflow-hidden bg-primary"
     >
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat scale-110"
-        style={{ backgroundImage: `url(${preloaderBg})` }}
-      />
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 z-1 bg-black/40 backdrop-blur-[2px]" />
-
       <div className="absolute top-0 left-0 w-full h-1 z-2">
         <div 
           ref={progressRef} 
