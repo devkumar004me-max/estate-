@@ -12,16 +12,13 @@ const variants = {
 };
 
 export function PageTransition({ children }: PageTransitionProps) {
-  useEffect(() => {
-    console.log('PageTransition: Mounted');
-  }, []);
-
   return (
     <motion.div
-      initial={{ opacity: 1 }} // Force opacity 1 for now
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      variants={variants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

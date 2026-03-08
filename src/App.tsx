@@ -1,10 +1,9 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LenisProvider } from './components/LenisProvider';
-import { Preloader } from './components/Preloader';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 
@@ -37,33 +36,16 @@ function AnimatedRoutes() {
 }
 
 function App() {
-  const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
-
   useEffect(() => {
-    console.log('App: isPreloaderComplete changed:', isPreloaderComplete);
-    if (isPreloaderComplete) {
-      console.log('App: Refreshing ScrollTrigger');
-      window.scrollTo(0, 0);
-      ScrollTrigger.refresh();
-    }
-  }, [isPreloaderComplete]);
+    // Refresh ScrollTrigger and ScrollFloat/Reveal components on mount
+    window.scrollTo(0, 0);
+    ScrollTrigger.refresh();
+  }, []);
 
   return (
     <BrowserRouter>
       <LenisProvider>
         <div className="bg-primary text-white min-h-screen font-authentic selection:bg-accent selection:text-primary relative">
-          {/* Debug Banner */}
-          <div className="fixed top-0 left-0 bg-red-500 text-white z-[1000] p-1 text-[10px] pointer-events-none">
-            Debug: {isPreloaderComplete ? 'Content Loaded' : 'Preloading...'}
-          </div>
-          
-          {!isPreloaderComplete && (
-            <Preloader onComplete={() => {
-              console.log('App: Preloader called onComplete');
-              setIsPreloaderComplete(true);
-            }} />
-          )}
-          
           <Navbar />
           <main className="relative z-1">
             <Suspense fallback={<div className="p-10 text-white">Loading routes...</div>}>
