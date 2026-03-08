@@ -55,6 +55,17 @@ export function Preloader({ onComplete }: { onComplete?: () => void }) {
       });
     }
 
+    // Fail-safe: force completion after 5 seconds
+    const failSafe = setTimeout(() => {
+      setComplete(true);
+      onComplete?.();
+    }, 5000);
+
+    return () => {
+      clearTimeout(failSafe);
+      tl.kill();
+    };
+
   }, [onComplete]);
 
   if (complete) return null;

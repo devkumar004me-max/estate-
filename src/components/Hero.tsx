@@ -49,6 +49,7 @@ export function Hero() {
         <ScrollFloat 
           animationDuration={0.8}
           stagger={0.03}
+          scrub={false}
           containerClassName="mb-6"
           textClassName="font-tanklager text-5xl sm:text-7xl md:text-8xl lg:text-[110px] leading-[0.9] tracking-tight uppercase text-white flex flex-wrap justify-center text-center"
         >
@@ -58,6 +59,7 @@ export function Hero() {
         <ScrollReveal
           baseOpacity={0.2}
           blurStrength={10}
+          scrub={false}
           containerClassName="max-w-2xl mx-auto"
           textClassName="text-lg md:text-xl text-secondary/80 font-clash"
         >

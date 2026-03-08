@@ -16,6 +16,7 @@ interface ScrollRevealProps {
   textClassName?: string;
   rotationEnd?: string;
   wordAnimationEnd?: string;
+  scrub?: boolean;
 }
 
 const ScrollReveal: React.FC<ScrollRevealProps> = ({
@@ -28,7 +29,8 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
   containerClassName = '',
   textClassName = '',
   rotationEnd = 'bottom bottom',
-  wordAnimationEnd = 'bottom bottom'
+  wordAnimationEnd = 'bottom bottom',
+  scrub = true
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +82,8 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
           scroller,
           start: 'top bottom-=20%',
           end: wordAnimationEnd,
-          scrub: true
+          scrub: scrub ? true : false,
+          toggleActions: scrub ? undefined : "play none none reverse"
         }
       }
     );
@@ -98,12 +101,13 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
             scroller,
             start: 'top bottom-=20%',
             end: wordAnimationEnd,
-            scrub: true
+            scrub: scrub ? true : false,
+            toggleActions: scrub ? undefined : "play none none reverse"
           }
         }
       );
     }
-  }, [scrollContainerRef, enableBlur, baseRotation, baseOpacity, rotationEnd, wordAnimationEnd, blurStrength]);
+  }, [scrollContainerRef, enableBlur, baseRotation, baseOpacity, rotationEnd, wordAnimationEnd, blurStrength, scrub]);
 
   return (
     <div ref={containerRef} className={containerClassName}>

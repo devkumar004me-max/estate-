@@ -15,6 +15,7 @@ interface ScrollFloatProps {
   scrollStart?: string;
   scrollEnd?: string;
   stagger?: number;
+  scrub?: boolean;
 }
 
 const ScrollFloat: React.FC<ScrollFloatProps> = ({
@@ -26,7 +27,8 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
   ease = 'back.inOut(2)',
   scrollStart = 'top bottom+=20%',
   scrollEnd = 'bottom center',
-  stagger = 0.02
+  stagger = 0.02,
+  scrub = true
 }) => {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
@@ -44,7 +46,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
     if (!el) return;
 
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
-    const charElements = el.querySelectorAll('.inline-block');
+    const charElements = el.querySelectorAll('span > span'); // Select the character spans specifically
 
     gsap.fromTo(
       charElements,
@@ -69,11 +71,12 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
           scroller,
           start: scrollStart,
           end: scrollEnd,
-          scrub: true
+          scrub: scrub ? true : false,
+          toggleActions: scrub ? undefined : "play none none reverse"
         }
       }
     );
-  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);
+  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger, scrub]);
 
   return (
     <div ref={containerRef} className={`overflow-hidden ${containerClassName}`}>
