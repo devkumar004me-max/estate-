@@ -24,7 +24,11 @@ export function Navbar() {
   }, []);
 
   // Close mobile menu on route change
-  useEffect(() => { setMobileMenuOpen(false); }, [location]);
+  useEffect(() => { 
+    requestAnimationFrame(() => {
+      setMobileMenuOpen(false); 
+    });
+  }, [location]);
 
   return (
     <>

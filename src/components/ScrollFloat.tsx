@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import type { ReactNode, RefObject } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface ScrollFloatProps {
-  children: ReactNode;
-  scrollContainerRef?: RefObject<HTMLElement>;
+  children: React.ReactNode;
+  scrollContainerRef?: React.RefObject<HTMLElement>;
   containerClassName?: string;
   textClassName?: string;
   animationDuration?: number;
@@ -35,7 +34,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
   const splitText = useMemo(() => {
     const text = typeof children === 'string' ? children : '';
     return text.split('').map((char, index) => (
-      <span className="inline-block" key={index}>
+      <span className="inline-block" key={index} style={{ display: 'inline-block' }}>
         {char === ' ' ? '\u00A0' : char}
       </span>
     ));
@@ -46,7 +45,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
     if (!el) return;
 
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
-    const charElements = el.querySelectorAll('span > span'); // Select the character spans specifically
+    const charElements = el.querySelectorAll('.inline-block');
 
     gsap.fromTo(
       charElements,
@@ -80,7 +79,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
 
   return (
     <div ref={containerRef} className={`overflow-hidden ${containerClassName}`}>
-      <span className={`inline-block ${textClassName}`}>{splitText}</span>
+      <h2 className={textClassName}>{splitText}</h2>
     </div>
   );
 };

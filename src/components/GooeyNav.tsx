@@ -16,6 +16,25 @@ export interface GooeyNavProps {
   initialActiveIndex?: number;
 }
 
+const getNoise = (n = 1) => n / 2 - Math.random() * n;
+
+const getXY = (distance: number, pointIndex: number, totalPoints: number): [number, number] => {
+  const angle = ((360 + getNoise(8)) / totalPoints) * pointIndex * (Math.PI / 180);
+  return [distance * Math.cos(angle), distance * Math.sin(angle)];
+};
+
+const createParticleData = (i: number, t: number, d: [number, number], r: number, particleCount: number, colors: number[]) => {
+  const rotate = getNoise(r / 10);
+  return {
+    start: getXY(d[0], particleCount - i, particleCount),
+    end: getXY(d[1] + getNoise(7), particleCount - i, particleCount),
+    time: t,
+    scale: 1 + getNoise(0.2),
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
+  };
+};
+
 const GooeyNav: React.FC<GooeyNavProps> = ({
   items,
   animationTime = 600,
@@ -32,25 +51,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   const textRef = useRef<HTMLSpanElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
 
-  const getNoise = (n = 1) => n / 2 - Math.random() * n;
-
-  const getXY = (distance: number, pointIndex: number, totalPoints: number): [number, number] => {
-    const angle = ((360 + getNoise(8)) / totalPoints) * pointIndex * (Math.PI / 180);
-    return [distance * Math.cos(angle), distance * Math.sin(angle)];
-  };
-
-  const createParticleData = (i: number, t: number, d: [number, number], r: number) => {
-    const rotate = getNoise(r / 10);
-    return {
-      start: getXY(d[0], particleCount - i, particleCount),
-      end: getXY(d[1] + getNoise(7), particleCount - i, particleCount),
-      time: t,
-      scale: 1 + getNoise(0.2),
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
-    };
-  };
-
   const makeParticles = (element: HTMLElement) => {
     const d: [number, number] = particleDistances;
     const r = particleR;
@@ -59,7 +59,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     
     for (let i = 0; i < particleCount; i++) {
       const t = animationTime * 2 + getNoise(timeVariance * 2);
-      const p = createParticleData(i, t, d, r);
+      const p = createParticleData(i, t, d, r, particleCount, colors);
       element.classList.remove('active');
       
       setTimeout(() => {
